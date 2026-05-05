@@ -21,8 +21,6 @@ Proje akisinin tasarimi, ders kapsam gereklilikleri ve ogretim uyesi geri bildir
 - `asama5.py`: Asama 2-3-4 ciktilarinin konsolidasyonu, karsilastirma tablolari ve genel ozet raporu
 - `dataset.csv`: Projede kullanilan ana veri seti
 - `requirements.txt`: Python kutuphane bagimliliklari
-- `Context/`: Proje briefi, geri donusler ve yol haritasi
-- `Bizim_raporlar/`: Raporlama notlari ve eklenebilecek icerikler
 
 ## Veri Seti Referansi
 
