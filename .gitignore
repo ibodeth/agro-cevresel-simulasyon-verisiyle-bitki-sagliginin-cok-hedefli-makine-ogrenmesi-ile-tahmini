@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Project outputs
+asama1_ciktilar_*/
+asama2_ciktilar_*/
+asama3_ciktilar_*/
+asama4_ciktilar_*/
+asama5_ciktilar_*/
