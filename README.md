@@ -1,4 +1,4 @@
-# gro-Cevresel Simulasyon Verisiyle Bitki Sagliginin Cok Hedefli Makine Ogrenmesi ile Tahmini
+# Agro-Cevresel Simulasyon Verisiyle Bitki Sagliginin Cok Hedefli Makine Ogrenmesi ile Tahmini
 
 Bu repo, cevresel simulasyon ve toprak sensor verileri uzerinden bitki sagligini **cok hedefli makine ogrenmesi** yaklasimi ile tahmin etmek icin hazirlanmistir. Calisma 3 temel goreve odaklanir:
 
