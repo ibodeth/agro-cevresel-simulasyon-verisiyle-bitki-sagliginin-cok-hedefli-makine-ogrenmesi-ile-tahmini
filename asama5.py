@@ -125,12 +125,14 @@ def csv_yukle(dosya_yolu: Path) -> pd.DataFrame:
     Tüm asama2/3/4 çıktıları encoding='utf-8-sig' ile yazılmıştır.
     Windows'ta varsayılan sistem kodlaması (cp1252 vb.) BOM karakterini
     yanlış yorumlayabileceğinden encoding açıkça belirtilir.
-    Herhangi bir okuma hatası durumunda programın çökmesi yerine
-    boş DataFrame döner ve uyarı mesajı yazdırılır.
+    Okuma hatalarında (kodlama sorunu, bozuk CSV, boş dosya vb.) programın
+    çökmesi yerine boş DataFrame döner ve uyarı mesajı yazdırılır; tüm
+    çağıran kod blokları zaten boş DataFrame durumunu kontrol etmektedir.
     """
     try:
         return pd.read_csv(dosya_yolu, encoding="utf-8-sig")
-    except Exception as exc:
+    except (UnicodeDecodeError, pd.errors.ParserError,
+            pd.errors.EmptyDataError, OSError) as exc:
         log.warning(f"CSV okuma hatası ({dosya_yolu.name}): {exc}")
         adim(f"⚠ {dosya_yolu.name} okunamadı: {type(exc).__name__}: {exc}")
         return pd.DataFrame()
