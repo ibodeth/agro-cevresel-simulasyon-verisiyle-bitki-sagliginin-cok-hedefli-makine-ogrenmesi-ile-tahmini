@@ -119,6 +119,25 @@ def csv_kaydet(df_obj: pd.DataFrame, dosya_adi: str,
     return p
 
 
+def csv_yukle(dosya_yolu: Path) -> pd.DataFrame:
+    """UTF-8-BOM ile kaydedilmiş CSV dosyasını güvenli okur.
+
+    Tüm asama2/3/4 çıktıları encoding='utf-8-sig' ile yazılmıştır.
+    Windows'ta varsayılan sistem kodlaması (cp1252 vb.) BOM karakterini
+    yanlış yorumlayabileceğinden encoding açıkça belirtilir.
+    Okuma hatalarında (kodlama sorunu, bozuk CSV, boş dosya vb.) programın
+    çökmesi yerine boş DataFrame döner ve uyarı mesajı yazdırılır; tüm
+    çağıran kod blokları zaten boş DataFrame durumunu kontrol etmektedir.
+    """
+    try:
+        return pd.read_csv(dosya_yolu, encoding="utf-8-sig")
+    except (UnicodeDecodeError, pd.errors.ParserError,
+            pd.errors.EmptyDataError, OSError) as exc:
+        log.warning(f"CSV okuma hatası ({dosya_yolu.name}): {exc}")
+        adim(f"⚠ {dosya_yolu.name} okunamadı: {type(exc).__name__}: {exc}")
+        return pd.DataFrame()
+
+
 def png_kaydet(fig, dosya_adi: str, klasor: Path = GRAFIK) -> Path:
     p = klasor / dosya_adi
     fig.savefig(p, dpi=FIG_DPI, bbox_inches="tight")
@@ -155,16 +174,16 @@ g1_best_kisa, g1_best_meta = "?", {}
 if A2_DIR:
     sonuc_path = A2_DIR / "01_sonuclar" / "01_tum_model_sonuclari.csv"
     if sonuc_path.exists():
-        gorev1_df = pd.read_csv(sonuc_path)
+        gorev1_df = csv_yukle(sonuc_path)
         adim(f"Görev 1 sonuç: {len(gorev1_df)} model")
 
     shap_path = A2_DIR / "05_shap" / "shap_feature_importance.csv"
     if shap_path.exists():
-        g1_shap = pd.read_csv(shap_path)
+        g1_shap = csv_yukle(shap_path)
 
     duyar_path = A2_DIR / "06_duyarlilik" / "duyarlilik_ozet.csv"
     if duyar_path.exists():
-        g1_duyar = pd.read_csv(duyar_path)
+        g1_duyar = csv_yukle(duyar_path)
 
     meta_path = A2_DIR / "asama2_gorev1_metadata.json"
     if meta_path.exists():
@@ -179,16 +198,16 @@ g2_best_kisa, g2_best_meta = "?", {}
 if A3_DIR:
     sonuc_path = A3_DIR / "01_sonuclar" / "01_tum_model_sonuclari.csv"
     if sonuc_path.exists():
-        gorev2_df = pd.read_csv(sonuc_path)
+        gorev2_df = csv_yukle(sonuc_path)
         adim(f"Görev 2 sonuç: {len(gorev2_df)} model")
 
     shap_path = A3_DIR / "05_shap" / "shap_feature_importance.csv"
     if shap_path.exists():
-        g2_shap = pd.read_csv(shap_path)
+        g2_shap = csv_yukle(shap_path)
 
     duyar_path = A3_DIR / "06_duyarlilik" / "duyarlilik_ozet.csv"
     if duyar_path.exists():
-        g2_duyar = pd.read_csv(duyar_path)
+        g2_duyar = csv_yukle(duyar_path)
 
     meta_path = A3_DIR / "asama3_gorev2_metadata.json"
     if meta_path.exists():
@@ -203,16 +222,16 @@ g3_best_kisa, g3_best_meta = "?", {}
 if A4_DIR:
     sonuc_path = A4_DIR / "01_sonuclar" / "01_tum_model_sonuclari.csv"
     if sonuc_path.exists():
-        gorev3_df = pd.read_csv(sonuc_path)
+        gorev3_df = csv_yukle(sonuc_path)
         adim(f"Görev 3 sonuç: {len(gorev3_df)} model")
 
     shap_path = A4_DIR / "05_shap" / "shap_feature_importance_toplam.csv"
     if shap_path.exists():
-        g3_shap = pd.read_csv(shap_path)
+        g3_shap = csv_yukle(shap_path)
 
     duyar_path = A4_DIR / "06_duyarlilik" / "duyarlilik_ozet.csv"
     if duyar_path.exists():
-        g3_duyar = pd.read_csv(duyar_path)
+        g3_duyar = csv_yukle(duyar_path)
 
     meta_path = A4_DIR / "asama4_gorev3_metadata.json"
     if meta_path.exists():
@@ -382,10 +401,13 @@ for feat in tum_ozellikler:
         row[tag] = round(float(match.values[0]), 6) if len(match) > 0 else None
     cross_shap_rows.append(row)
 
-cross_shap_df = pd.DataFrame(cross_shap_rows).sort_values(
-    ["G1_SHAP", "G2_SHAP", "G3_SHAP"],
-    ascending=False, na_position="last"
-).reset_index(drop=True)
+cross_shap_df = pd.DataFrame(cross_shap_rows)
+if not cross_shap_df.empty:
+    _sort_cols = [c for c in ["G1_SHAP", "G2_SHAP", "G3_SHAP"] if c in cross_shap_df.columns]
+    if _sort_cols:
+        cross_shap_df = cross_shap_df.sort_values(
+            _sort_cols, ascending=False, na_position="last"
+        ).reset_index(drop=True)
 csv_kaydet(cross_shap_df, "shap_cross_task_onem.csv")
 adim(f"Cross-task SHAP tablo: {len(cross_shap_df)} özellik")
 
