@@ -1,49 +1,53 @@
-# Agro-Cevresel Simulasyon Verisiyle Bitki Sagliginin Cok Hedefli Makine Ogrenmesi ile Tahmini
+# Agro-Environmental Simulation Plant Health Prediction (Multi-Target Machine Learning)
 
-Bu repo, cevresel simulasyon ve toprak sensor verileri uzerinden bitki sagligini **cok hedefli makine ogrenmesi** yaklasimi ile tahmin etmek icin hazirlanmistir. Calisma 3 temel goreve odaklanir:
+> **Note:** This is a lightweight academic project designed for agricultural-environmental simulation and multi-target plant health prediction.
 
-1. `failure_flag` ile basarisizlik/bitki olum tahmini (ikili siniflandirma)
-2. `suitability_score` ile uygunluk skoru tahmini (regresyon)
-3. `stress_level` ile stres duzeyi tahmini (cok sinifli siniflandirma)
+This repository focuses on predicting plant health using environmental simulation and soil sensor data through a **multi-target machine learning** approach. The study targets three core tasks:
 
-Proje akisinin tasarimi, ders kapsam gereklilikleri ve ogretim uyesi geri bildirimlerine uygun sekilde kurgulanmistir:
-- F1, PR-AUC, ROC-AUC, confusion matrix gibi metriklerin kullanimi
-- Sinif dengesizliginde SMOTE ve/veya `class_weight` yaklasimi
-- SHAP ile aciklanabilirlik
-- %5/%10/%20 gurultu altinda duyarlilik (sensitivite) analizi
+1. **Failure Flag Prediction:** Predicts failure/plant death (Binary Classification) using `failure_flag`.
+2. **Suitability Score Prediction:** Predicts suitability scores (Regression) using `suitability_score`.
+3. **Stress Level Prediction:** Predicts stress levels (Multiclass Classification) using `stress_level`.
 
-## Repo Icerigi
+---
 
-- `asama1.py`: Veri kesfi, on isleme, train/test ayrimi, leakage-onleyici pipeline, dengeleme ve model girdilerinin hazirlanmasi
-- `asama2.py`: Gorev 1 - basarisizlik tahmini (binary classification)
-- `asama3.py`: Gorev 2 - uygunluk skoru tahmini (regresyon)
-- `asama4.py`: Gorev 3 - stres duzeyi tahmini (multiclass classification)
-- `asama5.py`: Asama 2-3-4 ciktilarinin konsolidasyonu, karsilastirma tablolari ve genel ozet raporu
-- `dataset.csv`: Projede kullanilan ana veri seti
-- `requirements.txt`: Python kutuphane bagimliliklari
+## Repository Structure
 
-## Veri Seti Referansi
+- `asama1.py`: Data exploration, preprocessing, train/test split, leakage-preventive pipeline, balancing, and model input preparation.
+- `asama2.py`: Task 1 - Failure flag prediction (Binary Classification).
+- `asama3.py`: Task 2 - Suitability score prediction (Regression).
+- `asama4.py`: Task 3 - Stress level prediction (Multiclass Classification).
+- `asama5.py`: Consolidation of tasks, comparative tables, and overall summary report.
+- `dataset.csv`: Main dataset used in the project.
+- `requirements.txt`: Python library dependencies.
 
-**Kullanilan veri seti:** `dataset.csv` (bu repoda bulunur)
+---
 
-- Kayit sayisi: 543,210
-- Sutun sayisi: 25
-- Ana degiskenler:
-  - Cevresel/toprak ozellikleri: `soil_type`, `soil_moisture_pct`, `soil_temp_c`, `air_temp_c`, `light_intensity_par`, `soil_ph`, `nitrogen_ppm`, `phosphorus_ppm`, `potassium_ppm` vb.
-  - Hedefler: `suitability_score`, `stress_level`, `failure_flag`
+## Dataset Reference
 
-Not: Veri seti simulasyon/sentetik karakterdedir; bu nedenle cok yuksek metrikler gercek saha kosullarinda bire bir beklenmemelidir.
+**Main Dataset:** `dataset.csv`
+- Records: 543,210
+- Columns: 25
+- Variables:
+  - Environmental/Soil Features: `soil_type`, `soil_moisture_pct`, `soil_temp_c`, `air_temp_c`, `light_intensity_par`, `soil_ph`, `nitrogen_ppm`, `phosphorus_ppm`, `potassium_ppm`, etc.
+  - Targets: `suitability_score`, `stress_level`, `failure_flag`
 
-## Kurulum
+*Note: The dataset is simulated/synthetic; therefore, high performance metrics should not be directly expected in real-world agricultural environments.*
+
+---
+
+## Installation
 
 ```bash
 python -m venv .venv
-# Windows PowerShell
+# Activate on Windows PowerShell
 .venv\Scripts\Activate.ps1
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-## Calistirma Sirasi
+---
+
+## Execution Order
 
 ```bash
 python asama1.py
@@ -53,22 +57,25 @@ python asama4.py
 python asama5.py
 ```
 
-Her asama kendi zaman damgali cikti klasorunu olusturur:
+Each stage generates its own timestamped output folder:
 - `asama1_ciktilar_*`
 - `asama2_ciktilar_*`
 - `asama3_ciktilar_*`
 - `asama4_ciktilar_*`
 - `asama5_ciktilar_*`
 
-## Yontemsel Ozet
+---
 
-- On isleme: `ColumnTransformer` + `Pipeline` ile sayisal/kategorik akislarin ayrik yonetimi
-- Dengesizlik yonetimi: `failure_flag` icin SMOTE degerlendirmesi, cok sinifli gorevde `class_weight`
-- Modelleme: Klasik ML + ensemble + derin ogrenme (ANN/CNN/LSTM)
-- Secim: GridSearchCV, birincil metrik bazli model karsilastirmasi
-- Aciklanabilirlik: SHAP ile ozellik onemi
-- Dayaniklilik: Gaussian gurultu ile duyarlilik analizi
+## Methodology Summary
 
-## Akademik Not
+- **Preprocessing:** Separate numeric/categorical streams managed using `ColumnTransformer` + `Pipeline`.
+- **Imbalance Management:** SMOTE evaluation for `failure_flag`, and `class_weight` adjustments for multiclass tasks.
+- **Modeling:** Classical ML + Ensembles + Deep Learning models (ANN/CNN/LSTM).
+- **Model Selection:** GridSearchCV based on primary metrics comparison.
+- **Explainability:** SHAP feature importance analysis.
+- **Robustness:** Sensitivity analysis under Gaussian noise.
 
-Bu calisma ders projesi kapsaminda hazirlanmistir. Nihai rapor ve sunumda kod ciktilari yerine grafik, tablo ve yorum odakli anlatim tercih edilmelidir.
+---
+
+## License
+This project is licensed under the MIT License.
