@@ -12,11 +12,7 @@ This repository focuses on predicting plant health using environmental simulatio
 
 ## Repository Structure
 
-- `asama1.py`: Data exploration, preprocessing, train/test split, leakage-preventive pipeline, balancing, and model input preparation.
-- `asama2.py`: Task 1 - Failure flag prediction (Binary Classification).
-- `asama3.py`: Task 2 - Suitability score prediction (Regression).
-- `asama4.py`: Task 3 - Stress level prediction (Multiclass Classification).
-- `asama5.py`: Consolidation of tasks, comparative tables, and overall summary report.
+- `train_pipeline.py`: Consolidated machine learning pipeline handling feature engineering, preprocessing, train/test split, and model training/evaluations for all targets.
 - `dataset.csv`: Main dataset used in the project.
 - `requirements.txt`: Python library dependencies.
 
@@ -47,22 +43,13 @@ pip install -r requirements.txt
 
 ---
 
-## Execution Order
+## Execution
 
 ```bash
-python asama1.py
-python asama2.py
-python asama3.py
-python asama4.py
-python asama5.py
+python train_pipeline.py
 ```
 
-Each stage generates its own timestamped output folder:
-- `asama1_ciktilar_*`
-- `asama2_ciktilar_*`
-- `asama3_ciktilar_*`
-- `asama4_ciktilar_*`
-- `asama5_ciktilar_*`
+Models are exported as serialized joblib artifacts under the `models/` directory.
 
 ---
 
